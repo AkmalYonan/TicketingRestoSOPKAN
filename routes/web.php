@@ -29,6 +29,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/admin/meja', [AdminController::class, 'indexMeja'])->name('admin.meja');
     Route::get('/admin/menu', [AdminController::class, 'indexMenu'])->name('admin.menu');
+    Route::post('/admin/tambahMenu', [AdminController::class, 'storeMenu'])->name('admin.tambahMenu');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
