@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2023 at 08:36 AM
+-- Generation Time: Sep 25, 2023 at 07:44 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -41,9 +41,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id`, `namaProduk`, `harga`, `kategori_id`, `created_at`, `updated_at`) VALUES
-(1, 'Nasi Goreng', 20000, 2, NULL, NULL),
-(2, 'Mie Ayam', 15000, 1, '2023-09-23 20:45:16', '2023-09-23 20:45:16'),
-(4, 'Bakso', 15000, 1, '2023-09-23 20:54:20', '2023-09-23 20:54:20'),
+(1, 'Nasi Goreng Gila', 20000, 2, NULL, '2023-09-25 08:11:40'),
 (5, 'Mie goreng', 16000, 2, '2023-09-23 21:15:52', '2023-09-23 21:15:52'),
 (6, 'Kopi Susu', 5000, 3, '2023-09-23 21:58:22', '2023-09-23 21:58:22'),
 (7, 'Es Kopi', 7000, 4, '2023-09-23 21:58:50', '2023-09-23 21:58:50'),
@@ -96,7 +94,8 @@ INSERT INTO `kategori` (`id`, `nama`) VALUES
 
 CREATE TABLE `meja` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nomor` varchar(255) NOT NULL,
+  `nomor` int(10) NOT NULL,
+  `is_booked` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -336,7 +335,7 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `meja`
 --
 ALTER TABLE `meja`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
 
 --
 -- AUTO_INCREMENT for table `migrations`

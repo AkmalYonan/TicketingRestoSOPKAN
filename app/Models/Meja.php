@@ -13,5 +13,6 @@ class Meja extends Model
 
     protected $fillable = [
         'nomor',
+        'is_booked'
     ];
 }
