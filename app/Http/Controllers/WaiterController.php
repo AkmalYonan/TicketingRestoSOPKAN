@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\kategori;
-use App\Models\Meja;
-use App\Models\Order;
-use App\Models\Pelanggan;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class WaiterController extends Controller
@@ -29,92 +25,5 @@ class WaiterController extends Controller
     public function show(Kategori $kategori)
     {
         return view('waiter.show', compact('kategori'));
-    }
-
-    public function showCart()
-    {
-        $mejas = Meja::where('is_booked', 0)->get();
-
-        return view('waiter.cart', compact('mejas'));
-    }
-
-    public function addCart($id)
-    {
-        $menu = Barang::findOrFail($id);
-        $cart = session()->get('cart', []);
-        if (isset($cart[$id])) {
-            $cart[$id]['qty']++;
-        } else {
-            $cart[$id] = [
-                "id" => $menu->id,
-                "namaProduk" => $menu->namaProduk,
-                "harga" => $menu->harga,
-                "kategori_id" => $menu->kategori_id,
-                "qty" => 1,
-            ];
-        }
-
-        session()->put('cart', $cart);
-        // dd(Session::get('cart'));
-        return redirect()->back()->with('success', 'Barang telah berhasil di tambahkan');
-    }
-
-    public function removeItem($id)
-    {
-        if (session()->has('cart') && array_key_exists($id, session('cart'))) {
-            $cart = session('cart');
-            unset($cart[$id]);
-            session(['cart' => $cart]);
-        }
-
-        return redirect()->back();
-    }
-
-    public function updateQty(Request $request, $id)
-    {
-        $action = $request->input('action');
-
-        if (session()->has('cart') && array_key_exists($id, session('cart'))) {
-            $cart = session('cart');
-
-            if ($action === 'increase') {
-                $cart[$id]['qty']++;
-            } elseif ($action === 'decrease' && $cart[$id]['qty'] > 1) {
-                $cart[$id]['qty']--;
-            }
-
-            session(['cart' => $cart]);
-        }
-
-        return redirect()->back();
-    }
-
-    public function addOrder(Request $request)
-    {
-        $request->validate([
-            'meja' => ['required'],
-            'nama' => ['required'],
-            'jenkel' => ['required', 'in:Laki-laki,Perempuan'],
-            'nomorHp' => ['required'],
-            'alamat' => ['required'],
-        ]);
-
-        $user_id = auth()->user()->id;
-        $lastId = Order::max('id');
-        $id = $lastId ? $lastId + 1 : 1;
-
-        Pelanggan::create([
-            'namaPelanggan' => $request->nama,
-            'jenkel' => $request->jenkel,
-            'noHp' => $request->nomorHp,
-            'alamat' => $request->alamat,
-        ]);
-
-        Order::create([
-            'meja_id' => $request->meja,
-            'pelanggan_id' => $id,
-            'user_id' => $user_id,
-            'status' => 0,
-        ]);
     }
 }
