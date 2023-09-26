@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Detail_menu;
 use App\Models\kategori;
 use App\Models\Meja;
 use App\Models\Order;
@@ -87,28 +88,35 @@ class WaiterController extends Controller
 
     public function addOrder(Request $request)
     {
-        $request->validate([
-            'meja' => ['required'],
-            'nama' => ['required'],
-            'jenkel' => ['required', 'in:Laki-laki,Perempuan'],
-            'nomorHp' => ['required'],
-            'alamat' => ['required'],
-        ]);
 
         $user_id = auth()->user()->id;
         $lastId = Order::max('id');
-        $id = $lastId ? $lastId + 1 : 1;
+        $idOrder = $lastId ? $lastId + 1 : 1;
+
+        $cartItems = session()->get('cart');
+        // Simpan seluruh isi session ke dalam database atau penyimpanan permanen lainnya
+        foreach ($cartItems as $id => $details) {
+            Detail_menu::create([
+                'id_order' => $idOrder,
+                'id_barang' => $details['id'],
+                'subtotal' => $details['harga'] * $details['qty'],
+                'quantity' => $details['qty'],
+            ]);
+        }
+        session()->forget('cart');
 
         Pelanggan::create([
-            'namaPelanggan' => $request->nama,
+            'id' => $idOrder,
+            'namaPelanggan' => $request->namaPelanggan,
             'jenkel' => $request->jenkel,
             'noHp' => $request->nomorHp,
             'alamat' => $request->alamat,
         ]);
 
         Order::create([
+            'id' => $idOrder,
             'meja_id' => $request->meja,
-            'pelanggan_id' => $id,
+            'pelanggan_id' => $idOrder,
             'user_id' => $user_id,
             'status' => 0,
         ]);
