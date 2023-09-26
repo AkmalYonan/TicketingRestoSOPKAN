@@ -90,20 +90,32 @@ class WaiterController extends Controller
     {
         $user_id = auth()->user()->id;
         $lastId = Order::max('id');
-        $id = $lastId ? $lastId + 1 : 1;
+        $idOrder = $lastId ? $lastId + 1 : 1;
+
+        $cartItems = session()->get('cart');
+        // Simpan seluruh isi session ke dalam database atau penyimpanan permanen lainnya
+        foreach ($cartItems as $id => $details) {
+            Detail_menu::create([
+                'id_order' => $idOrder,
+                'id_barang' => $details['id'],
+                'subtotal' => $details['harga'] * $details['qty'],
+                'quantity' => $details['qty'],
+            ]);
+        }
+        session()->forget('cart');
 
         Pelanggan::create([
-            'id' => $id,
-            'namaPelanggan' => $request->namaPelangan,
+            'id' => $idOrder,
+            'namaPelanggan' => $request->namaPelanggan,
             'jenkel' => $request->jenkel,
             'noHp' => $request->nomorHp,
             'alamat' => $request->alamat,
         ]);
 
         Order::create([
-            'id' => $id,
+            'id' => $idOrder,
             'meja_id' => $request->meja,
-            'pelanggan_id' => $id,
+            'pelanggan_id' => $idOrder,
             'user_id' => $user_id,
             'status' => 0,
         ]);

@@ -15,6 +15,10 @@ class Detail_menu extends Model
         'id_order',
         'id_barang',
         'quantity',
+<<<<<<< HEAD
         'subtotal'
+=======
+        'subtotal',
+>>>>>>> be79448ba31c19207eb23571332cca4924f243a0
     ];
 }
