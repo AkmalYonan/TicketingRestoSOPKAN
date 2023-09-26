@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Detail_menu;
 use App\Models\kategori;
 use App\Models\Meja;
 use App\Models\Order;
@@ -87,30 +88,41 @@ class WaiterController extends Controller
 
     public function addOrder(Request $request)
     {
-        $request->validate([
-            'meja' => ['required'],
-            'nama' => ['required'],
-            'jenkel' => ['required', 'in:Laki-laki,Perempuan'],
-            'nomorHp' => ['required'],
-            'alamat' => ['required'],
-        ]);
-
         $user_id = auth()->user()->id;
         $lastId = Order::max('id');
         $id = $lastId ? $lastId + 1 : 1;
 
         Pelanggan::create([
-            'namaPelanggan' => $request->nama,
+            'id' => $id,
+            'namaPelanggan' => $request->namaPelangan,
             'jenkel' => $request->jenkel,
             'noHp' => $request->nomorHp,
             'alamat' => $request->alamat,
         ]);
 
         Order::create([
+            'id' => $id,
             'meja_id' => $request->meja,
             'pelanggan_id' => $id,
             'user_id' => $user_id,
             'status' => 0,
         ]);
+
+        $cartData = session('cart');
+        if (!empty($cartData)) {
+            foreach ($cartData as $id => $details) {
+                Detail_menu::create([
+                    'id_order' => $id,
+                    'id_barang' => $details['id'],
+                    'quantity' => $details['qty'],
+                    'subtotal' => $details['harga'] * $details['qty'],
+                ]);
+            }
+
+            // Setelah data disimpan ke database, Anda bisa mengosongkan sesi cart jika diperlukan.
+            session()->forget('cart');
+        }
+
+        return redirect()->back()->with('success', 'Order telah berhasil di tambahkan');
     }
 }
