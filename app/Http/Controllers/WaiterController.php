@@ -49,4 +49,34 @@ class WaiterController extends Controller
         // dd(Session::get('cart'));
         return redirect()->back()->with('success', 'Barang telah berhasil di tambahkan');
     }
+
+    public function removeItem($id)
+    {
+        if (session()->has('cart') && array_key_exists($id, session('cart'))) {
+            $cart = session('cart');
+            unset($cart[$id]);
+            session(['cart' => $cart]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function updateQty(Request $request, $id)
+    {
+        $action = $request->input('action');
+
+        if (session()->has('cart') && array_key_exists($id, session('cart'))) {
+            $cart = session('cart');
+
+            if ($action === 'increase') {
+                $cart[$id]['qty']++;
+            } elseif ($action === 'decrease' && $cart[$id]['qty'] > 1) {
+                $cart[$id]['qty']--;
+            }
+
+            session(['cart' => $cart]);
+        }
+
+        return redirect()->back();
+    }
 }
