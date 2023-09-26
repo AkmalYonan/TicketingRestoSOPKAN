@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 25, 2023 at 07:44 PM
+-- Generation Time: Sep 26, 2023 at 08:16 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -52,6 +52,19 @@ INSERT INTO `barang` (`id`, `namaProduk`, `harga`, `kategori_id`, `created_at`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_menu`
+--
+
+CREATE TABLE `detail_menu` (
+  `id_order` bigint(20) UNSIGNED NOT NULL,
+  `id_barang` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -73,18 +86,20 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `kategori` (
   `id` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL
+  `nama` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kategori`
 --
 
-INSERT INTO `kategori` (`id`, `nama`) VALUES
-(1, 'Makanan Kuah'),
-(2, 'Makanan kering'),
-(3, 'Minuman Panas'),
-(4, 'Minuman Dingin');
+INSERT INTO `kategori` (`id`, `nama`, `created_at`, `updated_at`) VALUES
+(1, 'Makanan Kuah', NULL, NULL),
+(2, 'Makanan kering', NULL, NULL),
+(3, 'Minuman Panas', NULL, NULL),
+(4, 'Minuman Dingin', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -99,6 +114,17 @@ CREATE TABLE `meja` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `meja`
+--
+
+INSERT INTO `meja` (`id`, `nomor`, `is_booked`, `created_at`, `updated_at`) VALUES
+(281, 1, 0, '2023-09-25 23:02:38', '2023-09-25 23:02:38'),
+(282, 2, 0, '2023-09-25 23:02:38', '2023-09-25 23:02:38'),
+(283, 3, 0, '2023-09-25 23:02:38', '2023-09-25 23:02:38'),
+(284, 4, 0, '2023-09-25 23:02:38', '2023-09-25 23:02:38'),
+(285, 5, 0, '2023-09-25 23:02:38', '2023-09-25 23:02:38');
 
 -- --------------------------------------------------------
 
@@ -136,10 +162,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 CREATE TABLE `order` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `meja_id` bigint(20) UNSIGNED NOT NULL,
-  `barang_id` bigint(20) UNSIGNED NOT NULL,
   `pelanggan_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `jumlah` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -241,6 +266,13 @@ ALTER TABLE `barang`
   ADD KEY `kategori_id` (`kategori_id`);
 
 --
+-- Indexes for table `detail_menu`
+--
+ALTER TABLE `detail_menu`
+  ADD KEY `id_order` (`id_order`,`id_barang`),
+  ADD KEY `Barang_detail` (`id_barang`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -271,7 +303,6 @@ ALTER TABLE `migrations`
 ALTER TABLE `order`
   ADD PRIMARY KEY (`id`),
   ADD KEY `order_meja_id_foreign` (`meja_id`),
-  ADD KEY `order_barang_id_foreign` (`barang_id`),
   ADD KEY `order_pelanggan_id_foreign` (`pelanggan_id`),
   ADD KEY `order_user_id_foreign` (`user_id`);
 
@@ -335,7 +366,7 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `meja`
 --
 ALTER TABLE `meja`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=296;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -384,10 +415,16 @@ ALTER TABLE `barang`
   ADD CONSTRAINT `kategori` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `detail_menu`
+--
+ALTER TABLE `detail_menu`
+  ADD CONSTRAINT `Barang_detail` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Order_detail` FOREIGN KEY (`id_order`) REFERENCES `order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `order`
 --
 ALTER TABLE `order`
-  ADD CONSTRAINT `order_barang_id_foreign` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `order_meja_id_foreign` FOREIGN KEY (`meja_id`) REFERENCES `meja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `order_pelanggan_id_foreign` FOREIGN KEY (`pelanggan_id`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `order_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

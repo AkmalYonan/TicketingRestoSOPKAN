@@ -47,8 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 Route::middleware('auth')->group(function () {
     Route::get('/waiter', [WaiterController::class, 'index'])->name('waiter.index');
+    Route::get('/kategori/{kategori}', [WaiterController::class, 'show'])->name('kategori.show');
 });
 
 //kasir

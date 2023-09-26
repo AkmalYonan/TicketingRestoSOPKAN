@@ -12,7 +12,6 @@ class WaiterController extends Controller
     public function index()
     {
         $kategoris = kategori::all();
-        $menus = Barang::All();
 
         foreach ($kategoris as $kategori) { // Loop melalui semua kategori
             foreach ($kategori->menu as $menu) { // Loop melalui menu dalam kategori
@@ -20,6 +19,11 @@ class WaiterController extends Controller
             }
         }
 
-        return view('waiter.index', compact('kategoris', 'menus'));
+        return view('waiter.index', compact('kategoris'));
+    }
+
+    public function show(Kategori $kategori)
+    {
+        return view('waiter.show', compact('kategori'));
     }
 }
