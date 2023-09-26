@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\kategori;
+use App\Models\Meja;
+use App\Models\Order;
+use App\Models\Pelanggan;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
@@ -26,7 +29,9 @@ class WaiterController extends Controller
 
     public function showCart()
     {
-        return view('waiter.cart');
+        $mejas = Meja::where('is_booked', 0)->get();
+
+        return view('waiter.cart', compact('mejas'));
     }
 
     public function addCart($id)
@@ -78,5 +83,34 @@ class WaiterController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function addOrder(Request $request)
+    {
+        $request->validate([
+            'meja' => ['required'],
+            'nama' => ['required'],
+            'jenkel' => ['required', 'in:Laki-laki,Perempuan'],
+            'nomorHp' => ['required'],
+            'alamat' => ['required'],
+        ]);
+
+        $user_id = auth()->user()->id;
+        $lastId = Order::max('id');
+        $id = $lastId ? $lastId + 1 : 1;
+
+        Pelanggan::create([
+            'namaPelanggan' => $request->nama,
+            'jenkel' => $request->jenkel,
+            'noHp' => $request->nomorHp,
+            'alamat' => $request->alamat,
+        ]);
+
+        Order::create([
+            'meja_id' => $request->meja,
+            'pelanggan_id' => $id,
+            'user_id' => $user_id,
+            'status' => 0,
+        ]);
     }
 }
