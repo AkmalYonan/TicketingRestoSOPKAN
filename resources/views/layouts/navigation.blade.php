@@ -40,6 +40,11 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('waiter.cart')" :active="request()->routeIs('waiter.cart')">
+                        {{count((array) session('cart'))}}
+                    </x-nav-link>
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button

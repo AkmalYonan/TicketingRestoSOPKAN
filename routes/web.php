@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::get('/waiter', [WaiterController::class, 'index'])->name('waiter.index');
+    Route::get('/waiter/cart', [WaiterController::class, 'showCart'])->name('waiter.cart');
+    Route::get('/waiter/addcart/{id}', [WaiterController::class, 'addCart'])->name('addorder.cart');
 });
 
 //kasir
