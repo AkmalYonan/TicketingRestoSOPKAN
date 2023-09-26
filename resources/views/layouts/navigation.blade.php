@@ -11,35 +11,51 @@
                 </div>
 
                 <!-- Navigation Links -->
+                @if (Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @if (Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('admin.meja')" :active="request()->routeIs('admin.meja')">
                         {{ __('Setting Meja') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @if (Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('admin.menu')" :active="request()->routeIs('admin.menu')">
                         {{ __('Setting Menu') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @if (Auth::user()->level == 'kasir' || Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('kasir.index')" :active="request()->routeIs('kasir.index')">
                         {{ __('Transaksi') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @if (Auth::user()->level == 'waiter' || Auth::user()->level == 'admin' || Auth::user()->level ==
+                'owner')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('waiter.index')" :active="request()->routeIs('waiter.index')">
                         {{ __('Order') }}
                     </x-nav-link>
                 </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('waiter.cart')" :active="request()->routeIs('waiter.cart')">
+                        {{count((array) session('cart'))}}
+                    </x-nav-link>
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
