@@ -49,6 +49,7 @@ Route::middleware('auth', 'waiter')->group(function () {
     Route::get('/waiter/addcart/{id}', [WaiterController::class, 'addCart'])->name('addorder.cart');
     Route::post('/cart/updateQty/{id}', [WaiterController::class, 'updateQty'])->name('cart.updateQty');
     Route::delete('/waiter/remove/{id}', [WaiterController::class, 'removeItem'])->name('cart.remove');
+    Route::post('/waiter/addOrder', [WaiterController::class, 'addOrder'])->name('order.add');
 });
 
 //kasir

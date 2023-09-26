@@ -14,6 +14,7 @@
             </div> --}}
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @if (Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <a href="{{ route('admin.meja')}}"
                     class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 flex items-center justify-center">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Setting Meja</h5>
@@ -22,15 +23,21 @@
                     class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 flex items-center justify-center">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Setting Menu</h5>
                 </a>
+                @endif
+                @if (Auth::user()->level == 'waiter' || Auth::user()->level == 'admin' || Auth::user()->level ==
+                'owner')
                 <a href="{{ route('waiter.index')}}"
                     class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 flex items-center justify-center">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Lihat Order</h5>
                 </a>
+                @endif
+                @if (Auth::user()->level == 'kasir' || Auth::user()->level == 'admin' || Auth::user()->level == 'owner')
                 <a href="{{ route('kasir.index')}}" class=" block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100
                     dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 flex items-center justify-center">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Lihat Transaksi
                     </h5>
                 </a>
+                @endif
             </div>
         </div>
     </div>
